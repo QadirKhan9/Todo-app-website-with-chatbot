@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../AuthProvider';
+import { AuthProvider, useAuth } from './AuthProvider';
 import { api } from '@/services/apiClient';
-import LoadingSpinner from '../LoadingSpinner';
-
+import LoadingSpinner from './LoadingSpinner'
 // Auto-resizing textarea hook
 const useAutoResizeTextarea = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -168,7 +167,7 @@ const FullscreenChatInterface: React.FC<FullscreenChatInterfaceProps> = ({ onTas
           </div>
           <h2 className="text-xl font-bold text-white">AI Assistant</h2>
         </div>
-        
+
         <div className="flex items-center space-x-3">
           <button
             onClick={onToggleFullscreen}
@@ -201,8 +200,8 @@ const FullscreenChatInterface: React.FC<FullscreenChatInterfaceProps> = ({ onTas
           >
             <div
               className={`max-w-[80%] rounded-2xl p-4 ${message.role === 'user'
-                  ? 'bg-indigo-600 text-white rounded-br-none shadow-sm'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-bl-none border border-gray-200 dark:border-gray-700'
+                ? 'bg-indigo-600 text-white rounded-br-none shadow-sm'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-bl-none border border-gray-200 dark:border-gray-700'
                 }`}
             >
               <div className="flex items-start space-x-3">
@@ -244,7 +243,7 @@ const FullscreenChatInterface: React.FC<FullscreenChatInterfaceProps> = ({ onTas
                   </svg>
                 </div>
                 <div className="flex items-center">
-                  <LoadingSpinner size="medium" />
+                  <LoadingSpinner size="md" />
                   <span className="ml-2 text-base">Thinking...</span>
                 </div>
               </div>

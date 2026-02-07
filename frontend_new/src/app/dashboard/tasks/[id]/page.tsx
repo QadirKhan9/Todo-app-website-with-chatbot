@@ -9,7 +9,8 @@ import TaskForm from '@/components/TaskForm';
 import { Task } from '@/lib/types';
 
 export default function TaskDetailPage() {
-  const { id: taskId } = useParams();
+  const params = useParams();
+  const taskId = params?.id as string;
   const router = useRouter();
   const { user } = useAuth();
   const {
@@ -151,11 +152,10 @@ export default function TaskDetailPage() {
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h3 className="text-sm font-medium text-gray-900">Status</h3>
                   <div className="mt-2">
-                    <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium ${
-                      task.isCompleted
+                    <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium ${task.isCompleted
                         ? 'bg-green-100 text-green-800'
                         : 'bg-yellow-100 text-yellow-800'
-                    }`}>
+                      }`}>
                       {task.isCompleted ? 'Completed' : 'Pending'}
                     </span>
                   </div>
@@ -164,13 +164,12 @@ export default function TaskDetailPage() {
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h3 className="text-sm font-medium text-gray-900">Priority</h3>
                   <div className="mt-2">
-                    <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium ${
-                      task.priority === 'high'
+                    <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium ${task.priority === 'high'
                         ? 'bg-red-100 text-red-800'
                         : task.priority === 'medium'
                           ? 'bg-yellow-100 text-yellow-800'
                           : 'bg-green-100 text-green-800'
-                    }`}>
+                      }`}>
                       {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
                     </span>
                   </div>
@@ -194,10 +193,10 @@ export default function TaskDetailPage() {
                   <div className="mt-1 text-sm text-gray-900">
                     {task.dueDate
                       ? new Date(task.dueDate).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })
                       : 'No due date'}
                   </div>
                 </div>

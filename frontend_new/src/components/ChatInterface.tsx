@@ -162,7 +162,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onTaskUpdate, isFullscree
 
   const handleQuickAction = (action: string) => {
     let message = '';
-    
+
     switch (action) {
       case 'create-task':
         message = 'Create new task a name ';
@@ -182,7 +182,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onTaskUpdate, isFullscree
       default:
         message = '';
     }
-    
+
     if (message) {
       setInputMessage(message);
       // Focus the textarea and move cursor to end
@@ -261,8 +261,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onTaskUpdate, isFullscree
           >
             <div
               className={`max-w-[85%] rounded-xl p-2 ${message.role === 'user'
-                  ? 'bg-indigo-600 text-white rounded-br-none shadow-sm'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-bl-none border border-gray-200 dark:border-gray-700'
+                ? 'bg-indigo-600 text-white rounded-br-none shadow-sm'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-bl-none border border-gray-200 dark:border-gray-700'
                 }`}
             >
               <div className="flex items-start space-x-1.5">
@@ -304,7 +304,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onTaskUpdate, isFullscree
                   </svg>
                 </div>
                 <div className="flex items-center">
-                  <LoadingSpinner size="small" />
+                  <LoadingSpinner size="sm" />
                   <span className="ml-1 text-sm">Thinking...</span>
                 </div>
               </div>
