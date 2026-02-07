@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* -----------------------------
+   Base Layer – Global Defaults
+-------------------------------- */
+@layer base {
+  html {
+    font-family: ui-sans-serif, system-ui, -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+      Arial, "Noto Sans", sans-serif;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900 antialiased;
+  }
+
+  h1 {
+    @apply text-3xl font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+
+  h3 {
+    @apply text-xl font-semibold;
+  }
+
+  p {
+    @apply text-gray-700 leading-relaxed;
+  }
+
+  a {
+    @apply text-blue-600 hover:text-blue-700 transition-colors;
+  }
+}
+
+/* -----------------------------
+   Components – Reusable UI
+-------------------------------- */
+@layer components {
+  .container {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .card {
+    @apply rounded-xl bg-white p-6 shadow-sm border border-gray-200;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg
+      px-4 py-2 text-sm font-medium transition-all
+      focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn bg-blue-600 text-white
+      hover:bg-blue-700 focus:ring-blue-500;
+  }
+
+  .btn-secondary {
+    @apply btn bg-gray-100 text-gray-900
+      hover:bg-gray-200 focus:ring-gray-400;
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-gray-300 bg-white px-3 py-2
+      text-sm placeholder-gray-400
+      focus:border-blue-500 focus:ring-2 focus:ring-blue-500
+      focus:outline-none;
+  }
+}
+
+/* -----------------------------
+   Utilities – UX Enhancements
+-------------------------------- */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* -----------------------------
+   Selection & Scrollbar
+-------------------------------- */
+::selection {
+  background: rgb(37 99 235);
+  color: white;
+}
+
+/* -----------------------------
+   Dark Mode (ready)
+-------------------------------- */
+.dark body {
+  @apply bg-gray-900 text-gray-100;
+}
+
+.dark .card {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark p {
+  @apply text-gray-300;
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
+
+  /* Light theme colors */
+  --color-primary-50: 239 246 255;
+  --color-primary-100: 219 234 254;
+  --color-primary-200: 191 219 254;
+  --color-primary-300: 147 197 253;
+  --color-primary-400: 96 165 250;
+  --color-primary-500: 59 130 246;
+  --color-primary-600: 37 99 235;
+  --color-primary-700: 29 78 216;
+  --color-primary-800: 30 64 175;
+  --color-primary-900: 30 58 138;
+
+  --color-secondary-50: 249 250 251;
+  --color-secondary-100: 243 244 246;
+  --color-secondary-200: 229 231 235;
+  --color-secondary-300: 209 213 219;
+  --color-secondary-400: 156 163 175;
+  --color-secondary-500: 107 114 128;
+  --color-secondary-600: 75 85 99;
+  --color-secondary-700: 55 65 81;
+  --color-secondary-800: 31 41 55;
+  --color-secondary-900: 17 24 39;
+
+  /* Common theme variables */
+  --transition-speed: 0.3s;
+  --border-radius: 0.5rem;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+}
+
+[data-theme='dark'], .dark {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 17, 24, 39;
+
+  /* Dark theme colors */
+  --color-primary-50: 239 246 255;
+  --color-primary-100: 219 234 254;
+  --color-primary-200: 191 219 254;
+  --color-primary-300: 147 197 253;
+  --color-primary-400: 96 165 250;
+  --color-primary-500: 59 130 246;
+  --color-primary-600: 79 70 229;
+  --color-primary-700: 99 102 241;
+  --color-primary-800: 129 140 248;
+  --color-primary-900: 165 180 252;
+
+  --color-secondary-50: 15 23 42;
+  --color-secondary-100: 30 41 59;
+  --color-secondary-200: 51 65 85;
+  --color-secondary-300: 71 85 105;
+  --color-secondary-400: 100 116 139;
+  --color-secondary-500: 148 163 184;
+  --color-secondary-600: 187 194 205;
+  --color-secondary-700: 203 213 225;
+  --color-secondary-800: 226 232 240;
+  --color-secondary-900: 241 245 249;
+}
+
+/* Apply smooth transitions to all theme-related properties */
+* {
+  transition: background-color var(--transition-speed) ease,
+              border-color var(--transition-speed) ease,
+              color var(--transition-speed) ease,
+              fill var(--transition-speed) ease,
+              stroke var(--transition-speed) ease;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+}

@@ -1,0 +1,236 @@
+# Todo AI Chatbot API Contracts
+
+## Overview
+This document defines the API contracts for the Todo AI Chatbot feature based on the functional requirements. These contracts specify the endpoints, request/response schemas, and error handling patterns.
+
+## Base URL
+`https://api.example.com/v1`
+
+## Authentication
+All endpoints require authentication using JWT tokens obtained through the existing Better Auth system.
+
+## Common Headers
+- `Authorization: Bearer {jwt_token}`
+- `Content-Type: application/json`
+- `Accept: application/json`
+
+## Error Response Format
+```json
+{
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable error message",
+    "details": {}
+  }
+}
+```
+
+## Endpoints
+
+### 1. Chat Operations
+
+#### POST /users/{user_id}/conversations/{conversation_id}/chat
+Processes a user's message and returns the AI response.
+
+**Request**:
+```json
+{
+  "message": "Natural language todo request (e.g., 'Add a task to buy groceries')"
+}
+```
+
+**Response (200)**:
+```json
+{
+  "conversation_id": "uuid",
+  "message_id": "uuid",
+  "response": "AI's natural language response",
+  "action_taken": {
+    "type": "todo_created|todo_updated|todo_deleted|info_provided",
+    "details": {}
+  },
+  "timestamp": "2023-01-01T00:00:00Z"
+}
+```
+
+**Errors**:
+- 400: Invalid request format
+- 401: Unauthorized
+- 403: Forbidden (trying to access another user's conversation)
+- 404: Conversation not found
+- 422: Unprocessable entity (validation error)
+- 500: Internal server error
+
+#### GET /users/{user_id}/conversations/{conversation_id}/messages
+Retrieves messages for a specific conversation.
+
+**Response (200)**:
+```json
+{
+  "conversation_id": "uuid",
+  "messages": [
+    {
+      "id": "uuid",
+      "role": "user|assistant",
+      "content": "Message content",
+      "timestamp": "2023-01-01T00:00:00Z",
+      "type": "standard|tool_call|tool_response"
+    }
+  ]
+}
+```
+
+### 2. Conversation Management
+
+#### POST /users/{user_id}/conversations
+Creates a new conversation.
+
+**Response (201)**:
+```json
+{
+  "conversation_id": "uuid",
+  "title": "Auto-generated title",
+  "created_at": "2023-01-01T00:00:00Z"
+}
+```
+
+#### GET /users/{user_id}/conversations
+Retrieves all conversations for a user.
+
+**Response (200)**:
+```json
+[
+  {
+    "id": "uuid",
+    "title": "Conversation title",
+    "created_at": "2023-01-01T00:00:00Z",
+    "updated_at": "2023-01-01T00:00:00Z",
+    "is_active": true
+  }
+]
+```
+
+#### GET /users/{user_id}/conversations/{conversation_id}
+Retrieves a specific conversation.
+
+**Response (200)**:
+```json
+{
+  "id": "uuid",
+  "title": "Conversation title",
+  "created_at": "2023-01-01T00:00:00Z",
+  "updated_at": "2023-01-01T00:00:00Z",
+  "is_active": true
+}
+```
+
+#### PUT /users/{user_id}/conversations/{conversation_id}
+Updates a conversation (e.g., title).
+
+**Request**:
+```json
+{
+  "title": "New conversation title"
+}
+```
+
+**Response (200)**:
+```json
+{
+  "id": "uuid",
+  "title": "New conversation title",
+  "updated_at": "2023-01-01T00:00:00Z"
+}
+```
+
+### 3. Todo Operations (via AI Agent)
+
+#### GET /users/{user_id}/todos
+Retrieves all todos for a user (typically called by AI agent internally).
+
+**Response (200)**:
+```json
+{
+  "todos": [
+    {
+      "id": "uuid",
+      "title": "Todo title",
+      "description": "Todo description",
+      "status": "pending|in_progress|completed",
+      "priority": "low|medium|high",
+      "due_date": "2023-01-01T00:00:00Z",
+      "created_at": "2023-01-01T00:00:00Z",
+      "updated_at": "2023-01-01T00:00:00Z"
+    }
+  ]
+}
+```
+
+#### POST /users/{user_id}/todos
+Creates a new todo (typically called by AI agent internally).
+
+**Request**:
+```json
+{
+  "title": "Todo title",
+  "description": "Todo description",
+  "priority": "low|medium|high",
+  "due_date": "2023-01-01T00:00:00Z"
+}
+```
+
+**Response (201)**:
+```json
+{
+  "id": "uuid",
+  "title": "Todo title",
+  "description": "Todo description",
+  "status": "pending",
+  "priority": "medium",
+  "due_date": "2023-01-01T00:00:00Z",
+  "created_at": "2023-01-01T00:00:00Z",
+  "updated_at": "2023-01-01T00:00:00Z"
+}
+```
+
+#### PUT /users/{user_id}/todos/{todo_id}
+Updates a todo (typically called by AI agent internally).
+
+**Request**:
+```json
+{
+  "title": "Updated title",
+  "description": "Updated description",
+  "status": "pending|in_progress|completed",
+  "priority": "low|medium|high",
+  "due_date": "2023-01-01T00:00:00Z"
+}
+```
+
+**Response (200)**:
+```json
+{
+  "id": "uuid",
+  "title": "Updated title",
+  "description": "Updated description",
+  "status": "in_progress",
+  "priority": "high",
+  "due_date": "2023-01-01T00:00:00Z",
+  "updated_at": "2023-01-01T00:00:00Z"
+}
+```
+
+#### DELETE /users/{user_id}/todos/{todo_id}
+Deletes a todo (typically called by AI agent internally).
+
+**Response (204)**: No content
+
+## Common Error Codes
+
+- `AUTHENTICATION_REQUIRED`: Missing or invalid authentication
+- `FORBIDDEN_ACCESS`: Attempting to access resources that don't belong to the user
+- `RESOURCE_NOT_FOUND`: Requested resource does not exist
+- `VALIDATION_ERROR`: Request data does not meet validation requirements
+- `INTERNAL_ERROR`: Unexpected server error
+- `AI_PROCESSING_ERROR`: Error occurred while processing with AI agent
+- `TOO_MANY_REQUESTS`: Rate limit exceeded

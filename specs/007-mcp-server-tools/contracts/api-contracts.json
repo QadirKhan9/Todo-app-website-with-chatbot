@@ -1,0 +1,409 @@
+# API Contracts: Todo AI Chatbot – MCP Server Tools
+
+## Overview
+This document defines the API contracts for the MCP tools that expose task operations.
+
+## add_task Tool
+
+### Description
+Creates a new task for the authenticated user.
+
+### Input Schema (JSON Schema)
+```json
+{
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the task",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the task",
+      "maxLength": 1000
+    }
+  },
+  "required": ["title"],
+  "additionalProperties": false
+}
+```
+
+### Output Schema (JSON Schema)
+```json
+{
+  "type": "object",
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "Indicates if the operation was successful"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "UUID of the created task"
+    },
+    "message": {
+      "type": "string",
+      "description": "Human-readable message about the operation"
+    }
+  },
+  "required": ["success", "task_id", "message"],
+  "additionalProperties": false
+}
+```
+
+### Example Request
+```json
+{
+  "title": "Buy groceries",
+  "description": "Need to buy milk, bread, and eggs"
+}
+```
+
+### Example Response
+```json
+{
+  "success": true,
+  "task_id": "123e4567-e89b-12d3-a456-426614174000",
+  "message": "Task 'Buy groceries' created successfully"
+}
+```
+
+## list_tasks Tool
+
+### Description
+Returns all tasks for the authenticated user, with optional filtering.
+
+### Input Schema (JSON Schema)
+```json
+{
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["pending", "completed", "all"],
+      "default": "all",
+      "description": "Filter tasks by status"
+    }
+  },
+  "additionalProperties": false
+}
+```
+
+### Output Schema (JSON Schema)
+```json
+{
+  "type": "object",
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "Indicates if the operation was successful"
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "UUID of the task"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the task"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the task"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "completed"],
+            "description": "Current status of the task"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update timestamp"
+          }
+        },
+        "required": ["id", "title", "status", "created_at", "updated_at"],
+        "additionalProperties": false
+      }
+    },
+    "count": {
+      "type": "integer",
+      "description": "Total number of tasks returned"
+    },
+    "message": {
+      "type": "string",
+      "description": "Human-readable message about the operation"
+    }
+  },
+  "required": ["success", "tasks", "count", "message"],
+  "additionalProperties": false
+}
+```
+
+### Example Request
+```json
+{
+  "status": "pending"
+}
+```
+
+### Example Response
+```json
+{
+  "success": true,
+  "tasks": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "title": "Buy groceries",
+      "description": "Need to buy milk, bread, and eggs",
+      "status": "pending",
+      "created_at": "2023-01-01T10:00:00Z",
+      "updated_at": "2023-01-01T10:00:00Z"
+    }
+  ],
+  "count": 1,
+  "message": "Retrieved 1 pending task(s)"
+}
+```
+
+## complete_task Tool
+
+### Description
+Marks a specific task as completed for the authenticated user.
+
+### Input Schema (JSON Schema)
+```json
+{
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "description": "UUID of the task to mark as completed"
+    }
+  },
+  "required": ["task_id"],
+  "additionalProperties": false
+}
+```
+
+### Output Schema (JSON Schema)
+```json
+{
+  "type": "object",
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "Indicates if the operation was successful"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "UUID of the completed task"
+    },
+    "message": {
+      "type": "string",
+      "description": "Human-readable message about the operation"
+    }
+  },
+  "required": ["success", "task_id", "message"],
+  "additionalProperties": false
+}
+```
+
+### Example Request
+```json
+{
+  "task_id": "123e4567-e89b-12d3-a456-426614174000"
+}
+```
+
+### Example Response
+```json
+{
+  "success": true,
+  "task_id": "123e4567-e89b-12d3-a456-426614174000",
+  "message": "Task 'Buy groceries' marked as completed"
+}
+```
+
+## update_task Tool
+
+### Description
+Updates the details of a specific task for the authenticated user.
+
+### Input Schema (JSON Schema)
+```json
+{
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "description": "UUID of the task to update"
+    },
+    "title": {
+      "type": "string",
+      "description": "New title of the task",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "description": {
+      "type": "string",
+      "description": "New description of the task",
+      "maxLength": 1000
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "completed"],
+      "description": "New status of the task"
+    }
+  },
+  "required": ["task_id"],
+  "additionalProperties": false
+}
+```
+
+### Output Schema (JSON Schema)
+```json
+{
+  "type": "object",
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "Indicates if the operation was successful"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "UUID of the updated task"
+    },
+    "message": {
+      "type": "string",
+      "description": "Human-readable message about the operation"
+    }
+  },
+  "required": ["success", "task_id", "message"],
+  "additionalProperties": false
+}
+```
+
+### Example Request
+```json
+{
+  "task_id": "123e4567-e89b-12d3-a456-426614174000",
+  "title": "Buy groceries and cook dinner",
+  "status": "completed"
+}
+```
+
+### Example Response
+```json
+{
+  "success": true,
+  "task_id": "123e4567-e89b-12d3-a456-426614174000",
+  "message": "Task 'Buy groceries and cook dinner' updated and marked as completed"
+}
+```
+
+## delete_task Tool
+
+### Description
+Removes a specific task from the authenticated user's list.
+
+### Input Schema (JSON Schema)
+```json
+{
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "description": "UUID of the task to delete"
+    }
+  },
+  "required": ["task_id"],
+  "additionalProperties": false
+}
+```
+
+### Output Schema (JSON Schema)
+```json
+{
+  "type": "object",
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "Indicates if the operation was successful"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "UUID of the deleted task"
+    },
+    "message": {
+      "type": "string",
+      "description": "Human-readable message about the operation"
+    }
+  },
+  "required": ["success", "task_id", "message"],
+  "additionalProperties": false
+}
+```
+
+### Example Request
+```json
+{
+  "task_id": "123e4567-e89b-12d3-a456-426614174000"
+}
+```
+
+### Example Response
+```json
+{
+  "success": true,
+  "task_id": "123e4567-e89b-12d3-a456-426614174000",
+  "message": "Task 'Buy groceries' deleted successfully"
+}
+```
+
+## Error Response Schema
+
+All tools follow this standard error response format:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "const": false,
+      "description": "Indicates the operation failed"
+    },
+    "error": {
+      "type": "string",
+      "description": "Human-readable error message"
+    },
+    "error_code": {
+      "type": "string",
+      "description": "Machine-readable error code"
+    }
+  },
+  "required": ["success", "error", "error_code"],
+  "additionalProperties": false
+}
+```
+
+### Example Error Response
+```json
+{
+  "success": false,
+  "error": "Task not found or access denied",
+  "error_code": "TASK_NOT_FOUND"
+}
+```
